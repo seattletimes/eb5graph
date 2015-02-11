@@ -1,6 +1,8 @@
 var util = require("./util");
 var tooltipHTML = require("./_tooltip.html");
 
+var animationLength = 1000;
+
 //on startup
 var plot = document.querySelector(".plot-area");
 
@@ -38,11 +40,18 @@ app.render = function() {
         var pxBase = base / 100 * plotBounds.height;
         var bottom = plotBounds.height - pxBase;
         util.transform(element, bottom, pxHeight);
+        if ("transitionDuration" in element.style) {
+          var duration = (row.data.length - i) * (animationLength / row.data.length) / 1000;
+          element.style.transitionDuration = duration + "s";
+        }
       });
       
       finish.push(function() {
         plot.className = plot.className.replace(/\s*animate\s*/g, "");
         util.removeTransform(element);
+        if ("transitionDuration" in element.style) {
+          element.style.transitionDuration = "";
+        }
         element.style.height = height + .1 + "%";
         element.style.bottom = base + "%";
       });
@@ -56,7 +65,7 @@ app.render = function() {
       util.syncLayout([finish]);
       app.animating = false;
       console.timeStamp("finished");
-    }, 1000);
+    }, animationLength);
   } else {
     util.syncLayout([finish]);
     app.animating = false;
@@ -65,12 +74,12 @@ app.render = function() {
 
 app.applications.forEach(function(row, i, apps) {
   var country = row.country;
-  var shade = Math.round(i * 240 / apps.length);
-  row.color = "rgb(" + [shade, shade, shade].join() + ")";
+  row.color = "hsl(" + (i * 15 + 180) + ", 40%, 40%)";
   row.data.forEach(function(item, i, arr) {
     var el = document.createElement("div");
-    el.className = "item";
+    el.className = "item " + country;
     el.setAttribute("connect", country + "-" + i);
+    el.setAttribute("data-index", i);
     el.style.width = 100 / arr.length + "%";
     el.style.left = i * (100 / arr.length) + "%";
     el.style.backgroundColor = row.color;

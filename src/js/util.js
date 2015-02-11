@@ -10,7 +10,7 @@ module.exports = {
     this.transform(element, bounds.top - parent.top + bounds.height, bounds.height);
   },
   transform: function(element, top, height) {
-    element.style[trans] = "translateY(" + top + "px) scaleY(" + height + ")"
+    element.style[trans] = "translateY(" + top + "px) scaleY(" + (height + 1) + ") scaleX(1.05)"
   },
   removeTransform: function(element) {
     element.style[trans] = "";
