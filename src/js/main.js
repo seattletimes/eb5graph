@@ -10,11 +10,17 @@ app.mode = "absolute";
 app.render = function() {
   if (app.animating) return;
   app.animating = true;
+  console.timeStamp("begin");
+  
   var stack = [];
   for (var i = 0; i < app.applications[0].data.length; i++) { stack[i] = 0 }; //zero the baseline
   var plotBounds = plot.getBoundingClientRect();
 
-  var chains = [];
+  //layout stages
+  var freeze = [];
+  var addClass = function() { plot.className += " animate" };
+  var animate = [];
+  var finish = [];
   
   app.applications.forEach(function(row) {
     row.data.forEach(function(item, i) {
@@ -22,45 +28,40 @@ app.render = function() {
       var height = app.mode == "absolute" ? item.absolute / app.max * 100 : item.relative;
       var base = stack[i];
       stack[i] += height;
-      var chain = [function(c) {
+      var bounds = element.getBoundingClientRect();
+        
+      freeze.push(function() {
+        util.freeze(bounds, plotBounds, element);
+      });
+      
+      animate.push(function() {
+        var pxHeight = height / 100 * plotBounds.height;
+        var pxBase = base / 100 * plotBounds.height;
+        var top = plotBounds.height - pxHeight - pxBase;
+        util.transform(element, top, pxHeight);
+      });
+      
+      finish.push(function() {
         plot.className = plot.className.replace(/\s*animate\s*/g, "");
         util.removeTransform(element);
         element.style.height = height + .1 + "%";
         element.style.bottom = base + "%";
-        c();
-      }];
-      var animation = [
-        util.delay(10),
-        function(c) {
-          util.freeze(element);
-          c();
-        },
-        util.delay(10),
-        function(c) {
-          plot.className += " animate";
-          var pxHeight = height / 100 * plotBounds.height;
-          var pxBase = base / 100 * plotBounds.height;
-          var top = plotBounds.height - pxHeight - pxBase;
-          util.transform(element, top, pxHeight);
-          c();
-        },
-        util.delay(1000)
-      ];
-      //prepend the animation steps if we're ready for it
-      if (app.animate) {
-        chain = animation.concat(chain);
-      }
-      //queue this up to run
-      chains.push(function(c) {
-        async.series(chain, c);
       });
+      
     });
   });
 
-  //run all chains in parallel, but on completion unset the animation flag
-  async.parallel(chains, function() {
+  if (app.animate) {
+    util.syncLayout([freeze, addClass, animate]);
+    setTimeout(function() {
+      util.syncLayout([finish]);
+      app.animating = false;
+      console.timeStamp("finished");
+    }, 1000);
+  } else {
+    util.syncLayout([finish]);
     app.animating = false;
-  });
+  }
 }
 
 app.applications.forEach(function(row, i, apps) {

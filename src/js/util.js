@@ -4,9 +4,7 @@ var trans =
   "transform";
 
 module.exports = {
-  freeze: function(element) {
-    var bounds = element.getBoundingClientRect();
-    var parent = element.parentElement.getBoundingClientRect();
+  freeze: function(bounds, parent, element) {
     element.style.height = "1px";
     element.style.bottom = "auto";
     this.transform(element, bounds.top - parent.top, bounds.height);
@@ -27,5 +25,18 @@ module.exports = {
         callback();
       }, interval || 400);
     }
+  },
+  syncLayout: function(stages) {
+    var reads = [];
+    stages.forEach(function(stage, i) {
+      if (typeof stage == "function") {
+        stage();
+      } else {
+        for (var i = 0; i < stage.length; i++) {
+          stage[i]();
+        }
+      }
+      reads.push(document.body.offsetTop);
+    });
   }
 };
