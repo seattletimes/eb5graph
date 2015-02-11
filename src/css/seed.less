@@ -5,10 +5,79 @@
   box-sizing: border-box;
 }
 
+body {
+  font-family: sans-serif;
+}
+
+.plot {
+  max-width: 800px;
+  height: 500px;
+  @axis-width: 50px;
+  position: relative;
+
+  .title {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: 100%;
+  }
+
+  .plot-area {
+    width: calc(~"100% - @{axis-width}");
+    height: 100%;
+    float: left;
+  }
+
+  .x-axis {
+    width: calc(~"100% - @{axis-width}");
+    left: @axis-width;
+    position: relative;
+    clear: both;
+    font-size: 12px;
+
+    label.year {
+      display: block;
+      position: absolute;
+      top: 0;
+      -webkit-transform-origin: bottom right;
+      transform-origin: bottom right;
+      -webkit-transform: rotate(-30deg);
+      transform: rotate(-30deg);
+      text-align: right;
+    }
+  }
+
+  .y-axis {
+    width: @axis-width;
+    height: 100%;
+    float: left;
+    position: relative;
+    border-right: 1px solid #888;
+
+    label.top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      text-align: right;
+      padding-right: 4px;
+      border-top: 1px dotted #888;
+    }
+
+    label.bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: right;
+      padding-right: 4px;
+      border-bottom: 1px dotted #888;
+    }
+  }
+}
+
 .plot-area {
   position: relative;
-  height: 500px;
-  max-width: 640px;
 
   .item {
     height: 20px;

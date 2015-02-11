@@ -1,17 +1,19 @@
 var util = require("./util");
 var tooltipHTML = require("./_tooltip.html");
 
-var animationLength = 1000;
-
-//on startup
-var plot = document.querySelector(".plot-area");
-
 var app = window.i526;
 app.mode = "absolute";
+var animationLength = 1000;
+
+var plot = document.querySelector(".plot-area");
+var topLabel = document.querySelector(".plot .y-axis .top");
+var bottomLabel = document.querySelector(".plot .y-axis .bottom");
+var title = document.querySelector(".plot .title");
+
 app.render = function() {
   if (app.animating) return;
   app.animating = true;
-  console.timeStamp("begin");
+  var isAbsolute = app.mode == "absolute";
   
   var stack = [];
   for (var i = 0; i < app.applications[0].data.length; i++) { stack[i] = 0 }; //zero the baseline
@@ -22,11 +24,15 @@ app.render = function() {
   var addClass = function() { plot.className += " animate" };
   var animate = [];
   var finish = [];
+
+  topLabel.innerHTML = isAbsolute ? app.max.toLocaleString() : "100%";
+  bottomLabel.innerHTML = isAbsolute ? "0" : "0%";
+  title.innerHTML = isAbsolute ? "I526 Applications" : "Relative proportion of applications by country"
   
   app.applications.forEach(function(row) {
     row.data.forEach(function(item, i) {
       var element = item.element;
-      var height = app.mode == "absolute" ? item.absolute / app.max * 100 : item.relative;
+      var height = isAbsolute ? item.absolute / app.max * 100 : item.relative;
       var base = stack[i];
       stack[i] += height;
       var bounds = element.getBoundingClientRect();
@@ -72,6 +78,7 @@ app.render = function() {
   }
 }
 
+//DOM setup
 app.applications.forEach(function(row, i, apps) {
   var country = row.country;
   row.color = "hsl(" + (i * 15 + 180) + ", 40%, 40%)";
@@ -96,8 +103,17 @@ app.applications.forEach(function(row, i, apps) {
     item.element = el;
     plot.appendChild(el);
   });
-
 });
+//label x-axis
+var xAxis = document.querySelector(".plot .x-axis");
+var len = app.applications[0].data.length;
+for (var i = 0; i < len; i++) {
+  var label = document.createElement("label");
+  label.className = "year";
+  label.innerHTML = i + 1992;
+  label.style.left = i * (100 / len) + "%";
+  xAxis.appendChild(label);
+}
 
 app.render();
 app.animate = true;
