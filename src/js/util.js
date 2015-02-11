@@ -7,10 +7,10 @@ module.exports = {
   freeze: function(bounds, parent, element) {
     element.style.height = "1px";
     element.style.bottom = "auto";
-    this.transform(element, bounds.top - parent.top, bounds.height);
+    this.transform(element, bounds.top - parent.top + bounds.height, bounds.height);
   },
   transform: function(element, top, height) {
-    element.style[trans] = "translateY(" + top + "px) scaleY(" + height + ")"
+    element.style[trans] = "translateZ(0) translateY(" + top + "px) scaleY(" + height + ")"
   },
   removeTransform: function(element) {
     element.style[trans] = "";

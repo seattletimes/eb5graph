@@ -1,5 +1,4 @@
 var util = require("./util");
-var async = require("./async");
 var tooltipHTML = require("./_tooltip.html");
 
 //on startup
@@ -37,8 +36,8 @@ app.render = function() {
       animate.push(function() {
         var pxHeight = height / 100 * plotBounds.height;
         var pxBase = base / 100 * plotBounds.height;
-        var top = plotBounds.height - pxHeight - pxBase;
-        util.transform(element, top, pxHeight);
+        var bottom = plotBounds.height - pxBase;
+        util.transform(element, bottom, pxHeight);
       });
       
       finish.push(function() {
@@ -93,6 +92,12 @@ app.applications.forEach(function(row, i, apps) {
 
 app.render();
 app.animate = true;
+
+document.body.addEventListener("touchend", function() {
+  if (app.animating) return;
+  app.mode = app.mode == "absolute" ? "relative" : "absolute";
+  app.render();
+});
 
 document.body.addEventListener("click", function() {
   if (app.animating) return;
