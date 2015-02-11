@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <title><%= json.project.title %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <%= t.include("partials/_adHead.html") %>
+  </head>
+  <body>
+
+    <responsive-child>
+      <section class="plot">
+        <main class="plot-area"></main>
+        <!-- axes as asides -->
+      </section>
+    </responsive-child>
+
+    <%
+var sequences = [];
+var titleCase = function(str) {
+  return str.toLowerCase().replace(/(^|\s)\w/g, function(match) { return match.toUpperCase() });
+}
+
+var totals = [];
+var other = [];
+var cutoff = 200;
+csv.counts.forEach(function(row) {
+  var country = titleCase(row.country);
+  var sequence = row.total > cutoff ? [] : other;
+  for (var key in row) {
+    if (key.match(/\d+/)) {
+      var year = key * 1 - 1992;
+      var value = row[key] * 1;
+      sequence[year] = (sequence[year] || 0) + value;
+      totals[year] = totals[year] ? totals[year] + value : value;
+    }
+  }
+  if (row.total > cutoff) {
+    sequences.push({
+      country: country,
+      data: sequence
+    });
+  }
+});
+sequences.push({
+  country: "Other",
+  data: other
+});
+sequences.forEach(function(country) {
+  country.data = country.data.map(function(value, i) {
+    return {
+      absolute: value,
+      relative: value / totals[i] * 100
+    };
+  });
+});
+var highest = Math.max.apply(null, totals);
+    %>
+    <script>
+window.i526 = <%= JSON.stringify({ applications: sequences, max: highest }) %>;
+    </script>
+    <script src="app.js"></script>
+    <%= json.project.production ? t.include("partials/_adFoot.html") : "" %>
+    <%= json.project.production ? t.include("partials/_workHere.html") : "" %>
+  </body>
+</html>

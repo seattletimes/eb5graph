@@ -1,0 +1,55 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.plot-area {
+  position: relative;
+  height: 500px;
+  max-width: 640px;
+
+  .item {
+    height: 20px;
+    position: absolute;
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+
+    .animate& {
+      transition-duration: 1s;
+      transition-timing-function: ease-in-out;
+      transition-property: transform;
+      border: none !important;
+
+      .tooltip {
+        display: none !important;
+      }
+    }
+
+    .tooltip {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 110%;
+      background: white;
+      padding: 8px;
+      width: 200px;
+      border: 1px solid black;
+      z-index: 999;
+    }
+
+    &:hover {
+      border: 1px solid orange;
+      z-index: 99;
+
+      .tooltip {
+        display: block;
+        &:hover {
+          display: none;
+        }
+      }
+    }
+  }
+
+}
