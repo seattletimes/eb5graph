@@ -78,7 +78,31 @@ app.render = function() {
   }
 }
 
+// console.time("DOM");
 //DOM setup
+var len = app.applications[0].data.length;
+var xAxis = document.querySelector(".plot .x-axis");
+var yearly = []; //resorted by year for tooltips
+
+for (var i = 0; i < app.applications[0].data.length; i++) {
+  var countries = {};
+  for (var c = 0; c < app.applications.length; c++) {
+    var country = app.applications[c]; //get each country
+    var data = country.data[i]; //grab the specific year for that country
+    countries[country.country] = data;
+  }
+  yearly[i] = countries; //add that year to the collection
+}
+
+for (var i = 0; i < len; i++) {
+  //create a label for the year
+  var label = document.createElement("label");
+  label.className = "year";
+  label.innerHTML = i + 1992;
+  label.style.left = i * (100 / len) + "%";
+  xAxis.appendChild(label);
+}
+//add graph elements
 app.applications.forEach(function(row, i, apps) {
   var country = row.country;
   row.color = "hsl(" + (i * 15 + 180) + ", 40%, 40%)";
@@ -93,30 +117,28 @@ app.applications.forEach(function(row, i, apps) {
 
     var tooltip = document.createElement("div");
     tooltip.className = "tooltip";
+
+    var list = "";
+    var year = yearly[i];
+    for (var c in year) {
+      var data = year[c];
+      list += country == c ? "<li class=match>" : "<li>";
+      list += c + ": " + data.absolute + " (" + data.relative.toFixed(1) + "%)";
+    }
+
     tooltip.innerHTML = tooltipHTML
-      .replace("{{country}}", country)
       .replace("{{year}}", i + 1992)
-      .replace("{{absolute}}", item.absolute)
-      .replace("{{relative}}", item.relative.toFixed(1));
+      .replace("{{list}}", list);
     el.appendChild(tooltip);
     
     item.element = el;
     plot.appendChild(el);
   });
 });
-//label x-axis
-var xAxis = document.querySelector(".plot .x-axis");
-var len = app.applications[0].data.length;
-for (var i = 0; i < len; i++) {
-  var label = document.createElement("label");
-  label.className = "year";
-  label.innerHTML = i + 1992;
-  label.style.left = i * (100 / len) + "%";
-  xAxis.appendChild(label);
-}
 
 app.render();
 app.animate = true;
+// console.timeEnd("DOM");
 
 document.body.addEventListener("touchend", function() {
   if (app.animating) return;
