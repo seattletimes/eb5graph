@@ -14,6 +14,8 @@ app.render = function() {
   if (app.animating) return;
   app.animating = true;
   var isAbsolute = app.mode == "absolute";
+  // console.time("render");
+  // console.timeStamp("render start");
   
   var stack = [];
   for (var i = 0; i < app.applications[0].data.length; i++) { stack[i] = 0 }; //zero the baseline
@@ -36,28 +38,25 @@ app.render = function() {
       var base = stack[i];
       stack[i] += height;
       var bounds = element.getBoundingClientRect();
+      
+      var pxHeight = height / 100 * plotBounds.height;
+      var pxBase = base / 100 * plotBounds.height;
+      var bottom = plotBounds.height - pxBase;
+      var duration = (row.data.length - i) * (animationLength / row.data.length) / 1000;
         
       freeze.push(function() {
         util.freeze(bounds, plotBounds, element);
       });
       
       animate.push(function() {
-        var pxHeight = height / 100 * plotBounds.height;
-        var pxBase = base / 100 * plotBounds.height;
-        var bottom = plotBounds.height - pxBase;
         util.transform(element, bottom, pxHeight);
-        if ("transitionDuration" in element.style) {
-          var duration = (row.data.length - i) * (animationLength / row.data.length) / 1000;
-          element.style.transitionDuration = duration + "s";
-        }
+        util.transitionDuration(element, duration);
       });
       
       finish.push(function() {
         plot.className = plot.className.replace(/\s*animate\s*/g, "");
         util.removeTransform(element);
-        if ("transitionDuration" in element.style) {
-          element.style.transitionDuration = "";
-        }
+        util.transitionDuration(element, 0);
         element.style.height = height + .1 + "%";
         element.style.bottom = base + "%";
       });
@@ -70,7 +69,8 @@ app.render = function() {
     setTimeout(function() {
       util.syncLayout([finish]);
       app.animating = false;
-      console.timeStamp("finished");
+      // console.timeEnd("render");
+      // console.timeStamp("render finished");
     }, animationLength);
   } else {
     util.syncLayout([finish]);

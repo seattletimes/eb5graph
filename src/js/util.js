@@ -2,6 +2,11 @@ var trans =
   "msTransform" in document.body.style ? "msTransform" :
   "webkitTransform" in document.body.style ? "webkitTransform" :
   "transform";
+  
+var duration =
+  "msTransitionDuration" in document.body.style ? "msTransitionDuration" :
+  "webkitTransitionDuration" in document.body.style ? "webkitTransitionDuration" :
+  "transitionDuration";
 
 module.exports = {
   freeze: function(bounds, parent, element) {
@@ -11,6 +16,9 @@ module.exports = {
   },
   transform: function(element, top, height) {
     element.style[trans] = "translateY(" + top + "px) scaleY(" + (height + 1) + ") scaleX(1.05)"
+  },
+  transitionDuration: function(element, time) {
+    element.style[duration] = time + "s";
   },
   removeTransform: function(element) {
     element.style[trans] = "";
@@ -29,6 +37,8 @@ module.exports = {
   syncLayout: function(stages) {
     var reads = [];
     stages.forEach(function(stage, i) {
+      var tag = "stage " + i;
+      // console.time(tag);
       if (typeof stage == "function") {
         stage();
       } else {
@@ -37,6 +47,7 @@ module.exports = {
         }
       }
       reads.push(document.body.offsetTop);
+      // console.timeEnd(tag);
     });
   }
 };
