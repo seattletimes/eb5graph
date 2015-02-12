@@ -29,7 +29,7 @@ var titleCase = function(str) {
 
 var totals = [];
 var other = [];
-var cutoff = 200;
+var cutoff = 100;
 csv.counts.forEach(function(row) {
   var country = titleCase(row.country);
   var sequence = row.total > cutoff ? [] : other;

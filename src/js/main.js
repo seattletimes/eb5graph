@@ -105,7 +105,7 @@ for (var i = 0; i < len; i++) {
 //add graph elements
 app.applications.forEach(function(row, i, apps) {
   var country = row.country;
-  row.color = "hsl(" + (i * 15 + 180) + ", 40%, 40%)";
+  row.color = "hsl(" + (i * 47 + 180) + ", 30%, 50%)";
   row.data.forEach(function(item, i, arr) {
     var el = document.createElement("div");
     el.className = "item " + country;
