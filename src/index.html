@@ -10,14 +10,21 @@
   <body>
 
     <responsive-child>
+      <button class="switch">Toggle</button>
       <section class="plot">
-        <h1 class="title"></h1>
         <aside class="y-axis">
           <label class="top"></label>
           <label class="bottom"></label>
         </aside>
         <main class="plot-area"></main>
         <aside class="x-axis"></aside>
+        <h1 class="title"></h1>
+        <div class="mobile-modal">
+          <a class="close">&times;</a>
+          <div class="content"></div>
+          <div class="shift next" data-shift="nextElementSibling">&gt;</div>
+          <div class="shift prev" data-shift="previousElementSibling">&lt;</div>
+        </div>
       </section>
     </responsive-child>
 

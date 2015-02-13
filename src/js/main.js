@@ -1,5 +1,4 @@
 var util = require("./util");
-var tooltipHTML = require("./_tooltip.html");
 
 var app = window.i526;
 app.mode = "absolute";
@@ -9,6 +8,8 @@ var plot = document.querySelector(".plot-area");
 var topLabel = document.querySelector(".plot .y-axis .top");
 var bottomLabel = document.querySelector(".plot .y-axis .bottom");
 var title = document.querySelector(".plot .title");
+
+var isMobile = function() { return window.matchMedia && window.matchMedia("(max-width: 480px)").matches };
 
 app.render = function() {
   if (app.animating) return;
@@ -78,6 +79,12 @@ app.render = function() {
   }
 }
 
+app.switch = function() {
+  if (app.animating) return;
+  app.mode = app.mode == "absolute" ? "relative" : "absolute";
+  app.render();
+};
+
 // console.time("DOM");
 //DOM setup
 var len = app.applications[0].data.length;
@@ -105,7 +112,7 @@ for (var i = 0; i < len; i++) {
 //add graph elements
 app.applications.forEach(function(row, i, apps) {
   var country = row.country;
-  row.color = "hsl(" + (i * 47 + 180) + ", 30%, 50%)";
+  row.color = "hsl(" + (i * 48 + 180) + ", 30%, " + (i > (len / 2) ? "30%" : "50%") + ")";
   row.data.forEach(function(item, i, arr) {
     var el = document.createElement("div");
     el.className = "item " + country;
@@ -118,17 +125,16 @@ app.applications.forEach(function(row, i, apps) {
     var tooltip = document.createElement("div");
     tooltip.className = "tooltip";
 
-    var list = "";
+    var tooltipHTML = "<h1>" + (i + 1992) + "</h1><ul>";
     var year = yearly[i];
     for (var c in year) {
       var data = year[c];
-      list += country == c ? "<li class=match>" : "<li>";
-      list += c + ": " + data.absolute + " (" + data.relative.toFixed(1) + "%)";
+      tooltipHTML += country == c ? "<li class=match>" : "<li>";
+      tooltipHTML += "<b>" + c + "</b>: " + data.absolute.toLocaleString() + " (" + data.relative.toFixed(1) + "%)";
     }
+    tooltipHTML += "</ul>";
 
-    tooltip.innerHTML = tooltipHTML
-      .replace("{{year}}", i + 1992)
-      .replace("{{list}}", list);
+    tooltip.innerHTML = tooltipHTML;
     el.appendChild(tooltip);
     
     item.element = el;
@@ -140,14 +146,66 @@ app.render();
 app.animate = true;
 // console.timeEnd("DOM");
 
-document.body.addEventListener("touchend", function() {
-  if (app.animating) return;
-  app.mode = app.mode == "absolute" ? "relative" : "absolute";
-  app.render();
+var switchButton = document.querySelector(".switch");
+switchButton.addEventListener("click", app.switch);
+
+var focusedItem = null;
+
+//mobile touch handling - poor man's fastclick
+var lastTouch = null;
+plot.addEventListener("touchstart", function(e) {
+  if (e.target.className.indexOf("item") > -1) {
+    lastTouch = {
+      timestamp: Date.now(),
+      event: e
+    };
+  }
+});
+plot.addEventListener("touchend", function(e) {
+  if (!lastTouch) return;
+  //check for old/invalid events
+  var now = Date.now();
+  if (
+    now - lastTouch.timestamp > 150  || 
+    e.target != lastTouch.event.target ||
+    e.touches[0].clientX - lastTouch.event.touches[0].clientX > 40 ||
+    e.touches[0].clientY - lastTouch.event.touches[0].clientY > 40
+  ) {
+    return lastTouch = null;
+  }
+  var click = document.createEvent("MouseEvent");
+  click.initEvent("click", true, true);
+  e.target.dispatchEvent(click);
+  //kill slow clicks on mobile
+  e.preventDefault();
+  return false;
 });
 
-document.body.addEventListener("click", function() {
-  if (app.animating) return;
-  app.mode = app.mode == "absolute" ? "relative" : "absolute";
-  app.render();
+var modal = document.querySelector(".mobile-modal");
+plot.addEventListener("click", function(e) {
+  if (!isMobile()) return;
+  //on mobile, get the popup out of the bar
+  var tooltip = e.target.querySelector(".tooltip");
+  if (!tooltip) return;
+  focused = e.target;
+  //place it in the floating popup, and show that
+  modal.querySelector(".content").innerHTML = tooltip.innerHTML;
+  modal.classList.add("show"); //we can use classlist, it's mobile-only.
+});
+
+modal.querySelector(".close").addEventListener("click", function() {
+  modal.classList.remove("show");
+  focused = null;
+});
+
+[].slice.call(modal.querySelectorAll(".shift")).forEach(function(shift) {
+    shift.addEventListener("click", function(e) {
+    if (!focused) return;
+    var prop = e.target.getAttribute("data-shift");
+    var next = focused[prop];
+    console.log(focused, next);
+    if (!next.classList.contains("item")) return;
+    focused = next;
+    next.click();
+  });
 });
