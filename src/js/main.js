@@ -7,7 +7,7 @@ var animationLength = 1000;
 var plot = document.querySelector(".plot-area");
 var topLabel = document.querySelector(".plot .y-axis .top");
 var bottomLabel = document.querySelector(".plot .y-axis .bottom");
-var title = document.querySelector(".plot .title");
+var title = document.querySelector(".title");
 
 var isMobile = function() { return window.matchMedia && window.matchMedia("(max-width: 480px)").matches };
 
@@ -130,7 +130,7 @@ app.applications.forEach(function(row, i, apps) {
     for (var c in year) {
       var data = year[c];
       tooltipHTML += country == c ? "<li class=match>" : "<li>";
-      tooltipHTML += "<b>" + c + "</b>: " + data.absolute.toLocaleString() + " (" + data.relative.toFixed(1) + "%)";
+      tooltipHTML += "<b>" + c + "</b>: " + data.absolute.toLocaleString() + " - " + data.relative.toFixed(1) + "%";
     }
     tooltipHTML += "</ul>";
 
@@ -150,36 +150,6 @@ var switchButton = document.querySelector(".switch");
 switchButton.addEventListener("click", app.switch);
 
 var focusedItem = null;
-
-//mobile touch handling - poor man's fastclick
-// var lastTouch = null;
-// plot.addEventListener("touchstart", function(e) {
-//   if (e.target.className.indexOf("item") > -1) {
-//     lastTouch = {
-//       timestamp: Date.now(),
-//       event: e
-//     };
-//   }
-// });
-// plot.addEventListener("touchend", function(e) {
-//   if (!lastTouch) return;
-//   //check for old/invalid events
-//   var now = Date.now();
-//   if (
-//     now - lastTouch.timestamp > 150  || 
-//     e.target != lastTouch.event.target ||
-//     e.touches[0].clientX - lastTouch.event.touches[0].clientX > 40 ||
-//     e.touches[0].clientY - lastTouch.event.touches[0].clientY > 40
-//   ) {
-//     return lastTouch = null;
-//   }
-//   var click = document.createEvent("MouseEvent");
-//   click.initEvent("click", true, true);
-//   e.target.dispatchEvent(click);
-//   //kill slow clicks on mobile
-//   e.preventDefault();
-//   return false;
-// });
 
 var modal = document.querySelector(".mobile-modal");
 plot.addEventListener("click", function(e) {
@@ -207,4 +177,34 @@ modal.querySelector(".close").addEventListener("click", function() {
     focused = next;
     next.click();
   });
+});
+
+//mobile touch handling - poor man's fastclick
+var lastTouch = null;
+plot.addEventListener("touchstart", function(e) {
+  if (e.target.className.indexOf("item") > -1) {
+    lastTouch = {
+      timestamp: Date.now(),
+      event: e
+    };
+  }
+});
+plot.addEventListener("touchend", function(e) {
+  if (!lastTouch) return;
+  //check for old/invalid events
+  var now = Date.now();
+  if (
+    now - lastTouch.timestamp > 150  || 
+    e.target != lastTouch.event.target ||
+    e.touches[0].clientX - lastTouch.event.touches[0].clientX > 40 ||
+    e.touches[0].clientY - lastTouch.event.touches[0].clientY > 40
+  ) {
+    return lastTouch = null;
+  }
+  var click = document.createEvent("MouseEvent");
+  click.initEvent("click", true, true);
+  e.target.dispatchEvent(click);
+  //kill slow clicks on mobile
+  e.preventDefault();
+  return false;
 });

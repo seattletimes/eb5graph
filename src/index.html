@@ -18,14 +18,14 @@
         </aside>
         <main class="plot-area"></main>
         <aside class="x-axis"></aside>
-        <h1 class="title"></h1>
-        <div class="mobile-modal">
-          <a class="close">&times;</a>
-          <div class="content"></div>
-          <div class="shift next" data-shift="nextElementSibling">&gt;</div>
-          <div class="shift prev" data-shift="previousElementSibling">&lt;</div>
-        </div>
       </section>
+      <div class="mobile-modal">
+        <a class="close">&times;</a>
+        <div class="content"></div>
+        <div class="shift next" data-shift="nextElementSibling">&gt;</div>
+        <div class="shift prev" data-shift="previousElementSibling">&lt;</div>
+      </div>
+      <h1 class="title"></h1>
     </responsive-child>
 
     <%
@@ -39,6 +39,7 @@ var other = [];
 var cutoff = 100;
 csv.counts.forEach(function(row) {
   var country = titleCase(row.country);
+  if (country == "Unknown") return;
   var sequence = row.total > cutoff ? [] : other;
   for (var key in row) {
     if (key.match(/\d+/)) {

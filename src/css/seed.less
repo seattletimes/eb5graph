@@ -7,8 +7,20 @@
   box-sizing: border-box;
 }
 
+responsive-child {
+  overflow: hidden;
+  display: block;
+}
+
 body {
   font-family: sans-serif;
+}
+
+.title {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: 100%;
 }
 
 .plot {
@@ -16,13 +28,7 @@ body {
   height: 300px;
   @axis-width: 50px;
   position: relative;
-
-  .title {
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    font-size: 100%;
-  }
+  overflow: hidden;
 
   .plot-area {
     width: calc(~"100% - @{axis-width}");
@@ -167,7 +173,7 @@ body {
 .mobile-modal {
   display: none;
   position: absolute;
-  @pad: 20px;
+  @pad: 10px;
   top: @pad;
   left: @pad;
   right: @pad;
