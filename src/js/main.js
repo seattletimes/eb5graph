@@ -152,34 +152,34 @@ switchButton.addEventListener("click", app.switch);
 var focusedItem = null;
 
 //mobile touch handling - poor man's fastclick
-var lastTouch = null;
-plot.addEventListener("touchstart", function(e) {
-  if (e.target.className.indexOf("item") > -1) {
-    lastTouch = {
-      timestamp: Date.now(),
-      event: e
-    };
-  }
-});
-plot.addEventListener("touchend", function(e) {
-  if (!lastTouch) return;
-  //check for old/invalid events
-  var now = Date.now();
-  if (
-    now - lastTouch.timestamp > 150  || 
-    e.target != lastTouch.event.target ||
-    e.touches[0].clientX - lastTouch.event.touches[0].clientX > 40 ||
-    e.touches[0].clientY - lastTouch.event.touches[0].clientY > 40
-  ) {
-    return lastTouch = null;
-  }
-  var click = document.createEvent("MouseEvent");
-  click.initEvent("click", true, true);
-  e.target.dispatchEvent(click);
-  //kill slow clicks on mobile
-  e.preventDefault();
-  return false;
-});
+// var lastTouch = null;
+// plot.addEventListener("touchstart", function(e) {
+//   if (e.target.className.indexOf("item") > -1) {
+//     lastTouch = {
+//       timestamp: Date.now(),
+//       event: e
+//     };
+//   }
+// });
+// plot.addEventListener("touchend", function(e) {
+//   if (!lastTouch) return;
+//   //check for old/invalid events
+//   var now = Date.now();
+//   if (
+//     now - lastTouch.timestamp > 150  || 
+//     e.target != lastTouch.event.target ||
+//     e.touches[0].clientX - lastTouch.event.touches[0].clientX > 40 ||
+//     e.touches[0].clientY - lastTouch.event.touches[0].clientY > 40
+//   ) {
+//     return lastTouch = null;
+//   }
+//   var click = document.createEvent("MouseEvent");
+//   click.initEvent("click", true, true);
+//   e.target.dispatchEvent(click);
+//   //kill slow clicks on mobile
+//   e.preventDefault();
+//   return false;
+// });
 
 var modal = document.querySelector(".mobile-modal");
 plot.addEventListener("click", function(e) {
@@ -203,7 +203,6 @@ modal.querySelector(".close").addEventListener("click", function() {
     if (!focused) return;
     var prop = e.target.getAttribute("data-shift");
     var next = focused[prop];
-    console.log(focused, next);
     if (!next.classList.contains("item")) return;
     focused = next;
     next.click();
