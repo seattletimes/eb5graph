@@ -1,0 +1,7 @@
+<h1 class="year">Selected year: <%=data.year%></h1>
+<ul class="countries">
+  <% for (var c in data.countries) { %>
+    <li> 
+      <span class="name"><%= c %></span><span class="absolute"><%= data.countries[c].absolute.toLocaleString() %></span><span class="relative"><%= data.countries[c].relative.toFixed(1) %>%</span>
+  <% } %>
+</ul>

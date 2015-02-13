@@ -9,23 +9,16 @@
   </head>
   <body>
 
-    <responsive-child>
+    <responsive-child interval=300>
       <button class="switch">Toggle</button>
       <section class="plot">
-        <aside class="y-axis">
-          <label class="top"></label>
-          <label class="bottom"></label>
-        </aside>
         <main class="plot-area"></main>
         <aside class="x-axis"></aside>
       </section>
-      <div class="mobile-modal">
-        <a class="close">&times;</a>
-        <div class="content"></div>
-        <div class="shift next" data-shift="nextElementSibling">&gt;</div>
-        <div class="shift prev" data-shift="previousElementSibling">&lt;</div>
-      </div>
-      <h1 class="title"></h1>
+      <h1 class="title">I-526 applications</h1>
+      <section class="details">
+        <h1 class="tease">Choose a column for details</h1>
+      </section>
     </responsive-child>
 
     <%
@@ -36,7 +29,7 @@ var titleCase = function(str) {
 
 var totals = [];
 var other = [];
-var cutoff = 100;
+var cutoff = 250;
 csv.counts.forEach(function(row) {
   var country = titleCase(row.country);
   if (country == "Unknown") return;

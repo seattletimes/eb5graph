@@ -1,4 +1,6 @@
 @mobile: ~"(max-width: 480px)";
+@tablet: ~"(max-width: 768px)";
+@item-count: 23;
 
 * {
   -webkit-box-sizing: border-box;
@@ -8,7 +10,6 @@
 }
 
 responsive-child {
-  overflow: hidden;
   display: block;
 }
 
@@ -23,213 +24,57 @@ body {
   font-size: 100%;
 }
 
-.plot {
-  max-width: 800px;
-  height: 300px;
-  @axis-width: 50px;
-  position: relative;
-  overflow: hidden;
+@import "plot";
 
-  .plot-area {
-    width: calc(~"100% - @{axis-width}");
-    height: 100%;
-    float: left;
-
-    @media @mobile {
-      float: none;
-      width: 100%;
-    }
+.details {
+  h1.tease {
+    text-align:center;
+    color: #CCC;
   }
 
-  .x-axis {
-    width: calc(~"100% - @{axis-width}");
-    height: 40px;
-    left: @axis-width;
-    position: relative;
-    clear: both;
-    font-size: 12px;
-
-    @media @mobile {
-      display: none;
-    }
-
-    label.year {
-      display: block;
-      position: absolute;
-      top: 0;
-      -webkit-transform-origin: bottom right;
-      transform-origin: bottom right;
-      -webkit-transform: rotate(-30deg);
-      transform: rotate(-30deg);
-      text-align: right;
-    }
+  h1.year {
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    text-align: center;
   }
 
-  .y-axis {
-    width: @axis-width;
-    height: 100%;
-    float: left;
-    position: relative;
-    border-right: 1px solid #888;
+  ul.countries {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    font-size: 13px;
+    overflow: hidden;
 
-    @media @mobile {
-      display: none;
-    }
+    li {
+      width: 25%;
+      float: left;
+      padding: 0 4px;
+      border-bottom: 1px dotted #EEE;
 
-    label.top {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      text-align: right;
-      padding-right: 4px;
-      border-top: 1px dotted #888;
-    }
-
-    label.bottom {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      text-align: right;
-      padding-right: 4px;
-      border-bottom: 1px dotted #888;
-    }
-  }
-}
-
-.plot-area {
-  position: relative;
-
-  .item {
-    height: 20px;
-    position: absolute;
-    -webkit-transform-origin: 50% 100%;
-    transform-origin: 50% 100%;
-
-    .animate& {
-      transition-duration: 1s;
-      transition-timing-function: ease-in-out;
-      transition-property: transform;
-      border: none !important;
-
-      .tooltip {
-        display: none !important;
-      }
-    }
-
-    .tooltip {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 110%;
-      background: white;
-      padding: 8px;
-      width: 200px;
-      border: 1px solid black;
-      z-index: 999;
-      font-size: 13px;
-      line-height: 1.2;
-      color: #555;
-
-      h1 {
-        padding: 0;
-        margin: 0;
+      &:nth-child(2n) {
+        background: #EEE;
       }
 
-      ul {
-        padding: 0;
-        margin: 0;
-        list-style-type: none;
+      @media @tablet {
+        width: 33%;
       }
-
-      .match {
-        color: #C22;
-      }
-    }
-
-    &:hover {
-      border: 1px solid orange;
-      z-index: 99;
 
       @media @mobile {
-        z-index: auto;
+        width: 100%;
       }
 
-      .tooltip {
-        display: block;
-        @media @mobile {
-          //don't show tooltips on hover on mobile
-          display: none;
-        }
-        &:hover {
-          display: none;
-        }
+      .name {
+        width: 50%;
+        display: inline-block;
       }
-    }
-  }
-}
 
-.mobile-modal {
-  display: none;
-  position: absolute;
-  @pad: 10px;
-  top: @pad;
-  left: @pad;
-  right: @pad;
-  background: white;
-  border-radius: 10px;
-  font-size: 12px;
-  box-shadow: 0 8px 16px rgba(0,0,0,.3);
-  padding: 20px 8px 0;
-  overflow: hidden;
+      .absolute, .relative {
+        width: 25%;
+        display: inline-block;
+        text-align: right;
+      }
 
-  .close {
-    position: absolute;
-    top: 4px;
-    right: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  &.show {
-    display: block;
-  }
-
-  h1 {
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .match {
-    color: #C22;
-  }
-
-  .shift {
-    width: 50%;
-    padding: 8px 0;
-    text-align: center;
-    font-size: 20px;
-    border-top: 1px solid #F8F8F8;
-    font-weight: bold;
-    margin-top: 10px;
-    cursor: pointer;
-
-    &.next {
-      float: right;
-      border-left: 1px solid #F8F8F8;
-    }
-
-    &.prev {
-      float: left;
     }
   }
 }
