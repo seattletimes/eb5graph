@@ -57,9 +57,18 @@
     -webkit-transform-origin: 50% 100%;
     transform-origin: 50% 100%;
 
+    .selecting& {
+      opacity: .8;
+
+      &.active {
+        opacity: 1;
+      }
+    }
+
     .animate& {
       transition-duration: 1s;
       transition-timing-function: ease-in-out;
+      transition-property: -webkit-transform;
       transition-property: transform;
       border: none !important;
     }

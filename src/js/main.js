@@ -1,12 +1,14 @@
 var dot = require("dot");
 var util = require("./util");
 var detailTemplate = require("./_details.html");
+// var keyTemplate = require("./_key.html");
 
 dot.templateSettings.varname = "data";
 dot.templateSettings.evaluate = /<%([\s\S]+?)%>/g;
 dot.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
 
 var details = dot.template(detailTemplate);
+// var key = dot.template(keyTemplate);
 
 var app = window.i526;
 app.mode = "absolute";
@@ -91,6 +93,7 @@ app.render = function() {
 
 app.switch = function() {
   if (app.animating) return;
+  plot.className = plot.className.replace(/\sselecting/g, "");
   app.mode = app.mode == "absolute" ? "relative" : "absolute";
   title.innerHTML = app.mode == "absolute" ? "I-526 applications" : "I-526 applications (relative)"
   app.render();
@@ -113,23 +116,26 @@ app.setup = function() {
     xAxis.appendChild(label);
   }
 
-  //add graph elements
   app.applications.forEach(function(row, i, apps) {
     var country = row.country;
     row.color = "hsl(" + (i * 48 + 180) + ", 30%, " + (i > (len / 2) ? "30%" : "50%") + ")";
+
+    //add graph elements
     row.data.forEach(function(item, i, arr) {
       var el = document.createElement("div");
-      el.className = "item " + country;
+      el.className = "item " + country.replace(/\s/g, "");
       el.setAttribute("connect", country + "-" + i);
       el.setAttribute("data-index", i);
       // el.style.width = 100 / arr.length + "%";
       el.style.left = i * (100 / arr.length) + "%";
-      el.style.backgroundColor = row.color;
+      // el.style.backgroundColor = row.color;
+      el.title = country;
       
       item.element = el;
       plot.appendChild(el);
     });
   });
+
 };
 
 app.setup();
@@ -147,6 +153,19 @@ plot.addEventListener("click", function(e) {
   var x = e.clientX - bounds.left;
   var index = Math.floor(x / (bounds.width / yearly.length));
   
-  detailSection.innerHTML = details({ year: index + 1992, countries: yearly[index] });
+  detailSection.innerHTML = details({
+    year: index + 1992,
+    countries: yearly[index]
+  });
+
+  util.qsa(".item.active").forEach(function(el) {
+    el.className = el.className.replace(/\sactive/g, "");
+  });
+
+  util.qsa("[data-index='" + index + "']").forEach(function(el) {
+    el.className += " active";
+  });
+
+  plot.className += " selecting";
 
 });

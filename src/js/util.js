@@ -9,6 +9,9 @@ var duration =
   "transitionDuration";
 
 module.exports = {
+  qsa : function(s) {
+    return Array.prototype.slice.call(document.querySelectorAll(s));
+  },
   freeze: function(bounds, parent, element) {
     element.style.height = "1px";
     element.style.bottom = "auto";
