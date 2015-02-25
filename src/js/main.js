@@ -30,6 +30,7 @@ for (var i = 0; i < app.applications[0].data.length; i++) {
 
 var plot = document.querySelector(".plot-area");
 var title = document.querySelector(".title");
+var yMax = document.querySelector(".y-max");
 
 var isMobile = function() { return window.matchMedia && window.matchMedia("(max-width: 480px)").matches };
 
@@ -41,6 +42,8 @@ app.render = function() {
   var stack = [];
   for (var i = 0; i < app.applications[0].data.length; i++) { stack[i] = 0 }; //zero the baseline
   var plotBounds = plot.getBoundingClientRect();
+  
+  yMax.innerHTML = isAbsolute ? app.max.toLocaleString() : "100%";
 
   //layout stages
   var freeze = [];
