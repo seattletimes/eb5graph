@@ -95,7 +95,7 @@ app.switch = function() {
   if (app.animating) return;
   plot.className = plot.className.replace(/\sselecting/g, "");
   app.mode = app.mode == "absolute" ? "relative" : "absolute";
-  title.innerHTML = app.mode == "absolute" ? "Number of EB-5 investors approved" : "Percentage of EB-5 investors approved"
+  title.innerHTML = app.mode == "absolute" ? "EB-5 investors, by country" : "Share of EB-5 investors"
   app.render();
 };
 

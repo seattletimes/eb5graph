@@ -52,7 +52,7 @@
   .item {
     height: 20px;
     // min-width: 40px;
-    width: 100% / @item-count;
+    width: calc(100% / @item-count ~" + 1px");
     // min-width: 40px;
     position: absolute;
     -webkit-transform-origin: 50% 100%;

@@ -18,7 +18,7 @@ module.exports = {
     this.transform(element, bounds.top - parent.top + bounds.height, bounds.height);
   },
   transform: function(element, top, height) {
-    element.style[trans] = "translateY(" + top + "px) scaleY(" + (height + 1) + ") scaleX(1.05)"
+    element.style[trans] = "translateY(" + top + "px) scaleY(" + (height + 1) + ")"
   },
   transitionDuration: function(element, time) {
     element.style[duration] = time + "s";
