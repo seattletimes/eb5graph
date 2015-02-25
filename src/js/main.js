@@ -95,7 +95,7 @@ app.switch = function() {
   if (app.animating) return;
   plot.className = plot.className.replace(/\sselecting/g, "");
   app.mode = app.mode == "absolute" ? "relative" : "absolute";
-  title.innerHTML = app.mode == "absolute" ? "I-526 applications" : "I-526 applications (relative)"
+  title.innerHTML = app.mode == "absolute" ? "Number of EB-5 investors approved" : "Percentage of EB-5 investors approved"
   app.render();
 };
 
@@ -147,15 +147,24 @@ switchButton.addEventListener("click", app.switch);
 
 var detailSection = document.querySelector(".details");
 
-//on touch of a column,
+//on touch of a column
 plot.addEventListener("click", function(e) {
   var bounds = plot.getBoundingClientRect();
   var x = e.clientX - bounds.left;
   var index = Math.floor(x / (bounds.width / yearly.length));
+
+  var sorted = {};
+  var countries = Object.keys(yearly[index]).filter(function(c) { return c !== "Other" });
+  countries.sort(function(a, b) {
+    return yearly[index][b].absolute - yearly[index][a].absolute;
+  }).forEach(function(c) {
+    sorted[c] = yearly[index][c];
+  });
+  sorted.Other = yearly[index].Other;
   
   detailSection.innerHTML = details({
     year: index + 1992,
-    countries: yearly[index]
+    countries: sorted
   });
 
   util.qsa(".item.active").forEach(function(el) {
