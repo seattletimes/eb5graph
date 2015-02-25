@@ -10,8 +10,14 @@
   <body>
 
     <responsive-child interval=300>
-      <button class="switch">Switch view</button>
-      <h1 class="title">EB-5 investors, by country</h1>
+      <button class="switch">
+        <span class="icon">▥</span>
+        <label>Switch view</label>
+      </button>
+      <h1 class="title" data-mode="absolute">
+        <span class="absolute">EB-5 investors, by country</span>
+        <span class="relative">Share of EB-5 investors, by country</span>
+      </h1>
       <section class="plot">
         <main class="plot-area"></main>
         <aside class="x-axis"></aside>

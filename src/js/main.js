@@ -1,4 +1,4 @@
-require("component-responsive-frame");
+require("component-responsive-frame/child");
 
 var dot = require("dot");
 var util = require("./util");
@@ -97,7 +97,7 @@ app.switch = function() {
   if (app.animating) return;
   plot.className = plot.className.replace(/\sselecting/g, "");
   app.mode = app.mode == "absolute" ? "relative" : "absolute";
-  title.innerHTML = app.mode == "absolute" ? "EB-5 investors, by country" : "Share of EB-5 investors"
+  title.setAttribute("data-mode", app.mode);
   app.render();
 };
 
