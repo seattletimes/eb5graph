@@ -1,3 +1,5 @@
+require("component-responsive-frame");
+
 var dot = require("dot");
 var util = require("./util");
 var detailTemplate = require("./_details.html");
