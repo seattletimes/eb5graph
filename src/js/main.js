@@ -74,7 +74,7 @@ app.render = function() {
       });
       
       finish.push(function() {
-        plot.className = plot.className.replace(/\s*animate\s*/g, "");
+        plot.className = plot.className.replace(/\banimate\b/g, "");
         util.removeTransform(element);
         util.transitionDuration(element, 0);
         element.style.height = height + .1 + "%";
@@ -98,7 +98,7 @@ app.render = function() {
 
 app.switch = function() {
   if (app.animating) return;
-  plot.className = plot.className.replace(/\sselecting/g, "");
+  plot.className = plot.className.replace(/\bselecting\b/g, "");
   app.mode = app.mode == "absolute" ? "relative" : "absolute";
   title.setAttribute("data-mode", app.mode);
   app.render();
@@ -173,13 +173,13 @@ plot.addEventListener("click", function(e) {
   });
 
   util.qsa(".item.active").forEach(function(el) {
-    el.className = el.className.replace(/\sactive/g, "");
+    el.className = el.className.replace(/\bactive\b/g, "");
   });
 
   util.qsa("[data-index='" + index + "']").forEach(function(el) {
     el.className += " active";
   });
 
-  plot.className += " selecting";
+  plot.className += " selecting ";
 
 });
