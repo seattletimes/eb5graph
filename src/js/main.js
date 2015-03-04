@@ -43,7 +43,7 @@ app.render = function() {
   for (var i = 0; i < app.applications[0].data.length; i++) { stack[i] = 0 }; //zero the baseline
   var plotBounds = plot.getBoundingClientRect();
   
-  yMax.innerHTML = isAbsolute ? app.max.toLocaleString() : "100%";
+  yMax.innerHTML = isAbsolute ? app.max.toLocaleString().replace(/\.0+$/, "") : "100%";
 
   //layout stages
   var freeze = [];
