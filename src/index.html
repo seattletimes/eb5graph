@@ -49,7 +49,7 @@ var other = [];
 var cutoff = 250;
 csv.counts.forEach(function(row) {
   var country = titleCase(row.country);
-  if (country == "Unknown") return;
+  // if (country == "Unknown") return;
   var sequence = row.total > cutoff ? [] : other;
   for (var key in row) {
     if (key.match(/\d+/)) {
